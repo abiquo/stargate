@@ -15,3 +15,6 @@
 /tmp
 
 /.redcar
+
+/config/environments/production.rb
+/config/environments/preproduction.rb
