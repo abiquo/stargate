@@ -1,4 +1,9 @@
 Stargate::Application.routes.draw do
+  
+  get "admin/templates/sync"
+      
+  
+
   ActiveAdmin.routes(self)
 
   devise_for :admin_users, ActiveAdmin::Devise.config

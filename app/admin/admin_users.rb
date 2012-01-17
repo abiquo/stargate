@@ -1,4 +1,6 @@
 ActiveAdmin.register AdminUser do
+  config.comments = false
+  
   index do
     column :email
     column :current_sign_in_at
