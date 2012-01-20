@@ -49,11 +49,16 @@ ActiveRecord::Schema.define(:version => 20120117115045) do
   create_table "datacenters", :force => true do |t|
     t.string   "name"
     t.integer  "hosts"
+    t.integer  "id_template_server"
+    t.integer  "id_template_rs"
+    t.integer  "id_template_node"
+    t.integer  "infrastructure_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "infrastructures", :force => true do |t|
+    t.string   "name"
     t.string   "infrastructure_type"
     t.datetime "created_at"
     t.datetime "updated_at"
