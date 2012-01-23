@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(:version => 20120117115045) do
   create_table "infrastructures", :force => true do |t|
     t.string   "name"
     t.string   "infrastructure_type"
+    t.boolean  "deployed"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

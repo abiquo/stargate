@@ -28,14 +28,13 @@ ActiveAdmin.register Template do
         format.html { redirect_to admin_templates_url }
         format.json { head :ok }
       end 
-
     end
   end
 
 
-action_item :only => :index do
-  link_to 'Synchronize', :action => 'sync'
-end
+  action_item :only => :index do
+    link_to 'Synchronize', :action => 'sync'
+  end
 
   index do
     column :name

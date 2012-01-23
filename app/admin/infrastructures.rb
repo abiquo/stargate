@@ -1,4 +1,66 @@
 ActiveAdmin.register Infrastructure do
+  controller do
+    def deploy   
+      @conf = Preference.find(:all)
+    
+      configuration = Hash.new()
+      @conf.each do |p|
+        configuration[p.option] = p.value
+      end
+      ec2 = AWS::EC2::Base.new(:access_key_id => configuration['ACCESS_KEY_ID'], :secret_access_key => configuration['SECRET_ACCESS_KEY'])
+    
+      infrastructure = Infrastructure.find(params[:id])
+      
+      infrastructure.datacenters.each do |dc|
+        template = Template.find(dc.id_template_rs)
+        ec2.run_instances(:image_id => template.idRemote, :max_count => dc.hosts, :instance_type => "m1.large")
+      end
+      
+      infrastructure.deployed = true
+      infrastructure.save
+      
+      respond_to do |format|
+        format.html { redirect_to admin_infrastructure_path(infrastructure) }
+        format.json { head :ok }
+      end 
+    end
+    def undeploy   
+      @conf = Preference.find(:all)
+    
+      configuration = Hash.new()
+      @conf.each do |p|
+        configuration[p.option] = p.value
+      end
+      ec2 = AWS::EC2::Base.new(:access_key_id => configuration['ACCESS_KEY_ID'], :secret_access_key => configuration['SECRET_ACCESS_KEY'])
+      
+      infrastructure = Infrastructure.find(params[:id])
+      
+      i = Array.new
+      ec2.describe_instances().reservationSet.item.each do |instance|
+        instance.instancesSet.item.each do |instance_item|
+          i << instance_item.instanceId
+        end
+      end
+      ec2.terminate_instances(:instance_id => i)
+    
+      infrastructure.deployed = false
+      infrastructure.save
+      
+      respond_to do |format|
+        format.html { redirect_to admin_infrastructure_path(infrastructure) }
+        format.json { head :ok }
+      end 
+    end
+  end
+
+  action_item :only => :show do
+    if infrastructure.deployed == false
+      link_to("Deploy", :action => 'deploy')
+    else
+      link_to("Undeploy", :action => 'undeploy')
+    end
+  end
+  
   index do
     column :name do |infrastructure|
       link_to infrastructure.name, admin_infrastructure_path(infrastructure)
