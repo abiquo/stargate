@@ -14,6 +14,7 @@ ActiveAdmin.register Infrastructure do
       infrastructure.datacenters.each do |dc|
         template = Template.find(dc.id_template_rs)
         ec2.run_instances(:image_id => template.idRemote, :max_count => dc.hosts, :instance_type => "m1.large")
+        
       end
       
       infrastructure.deployed = true
@@ -66,9 +67,13 @@ ActiveAdmin.register Infrastructure do
       link_to infrastructure.name, admin_infrastructure_path(infrastructure)
     end
     column :infrastructure_type
+    column :deployed do |infrastructure|
+      status_tag (infrastructure.deployed ? "Deployed" : "Undeployed"), (infrastructure.deployed ? :ok : :error) 
+    end
 
     default_actions
   end
+  
   show :title => :name do
     panel "Datacenters" do
       table_for infrastructure.datacenters do |t|
