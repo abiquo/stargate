@@ -13,8 +13,10 @@ ActiveAdmin.register Infrastructure do
       
       infrastructure.datacenters.each do |dc|
         template = Template.find(dc.id_template_rs)
-        ec2.run_instances(:image_id => template.idRemote, :max_count => dc.hosts, :instance_type => "m1.large")
-        
+        @instances = ec2.run_instances(:image_id => template.idRemote, :max_count => dc.hosts, :instance_type => "m1.large")
+        @instances.instancesSet.item.each do |instance|
+          ec2.create_tags(:resource_id => instance.instanceId, :tag => [{'Name' => dc.name}])
+        end
       end
       
       infrastructure.deployed = true
@@ -94,8 +96,11 @@ ActiveAdmin.register Infrastructure do
         datacenter_form.input :id_template_server, :label => "Server template", :as => :select, :collection => Template.find(:all)
         datacenter_form.input :id_template_rs, :label => "RS template", :as => :select, :collection => Template.find(:all)
         datacenter_form.input :id_template_node, :label => "Node template", :as => :select, :collection => Template.find(:all)
+        
+        datacenter_form.buttons
       end
     end
     f.buttons
   end
+  filter  :name
 end
