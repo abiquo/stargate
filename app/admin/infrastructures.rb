@@ -97,7 +97,7 @@ ActiveAdmin.register Infrastructure do
         datacenter_form.input :id_template_rs, :label => "RS template", :as => :select, :collection => Template.find(:all)
         datacenter_form.input :id_template_node, :label => "Node template", :as => :select, :collection => Template.find(:all)
         
-        datacenter_form.buttons
+        datacenter_form.input :_destroy, :as=>:boolean, :required => false, :label=>'Remove'
       end
     end
     f.buttons
