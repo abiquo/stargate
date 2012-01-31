@@ -1,4 +1,5 @@
 ActiveAdmin.register AdminUser do
+  menu :priority => 90
   config.comments = false
   
   index do
