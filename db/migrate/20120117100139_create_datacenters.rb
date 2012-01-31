@@ -6,6 +6,7 @@ class CreateDatacenters < ActiveRecord::Migration
       t.integer :id_template_server
       t.integer :id_template_rs
       t.integer :id_template_node
+      t.integer :id_zone
       t.references :infrastructure
 
       t.timestamps

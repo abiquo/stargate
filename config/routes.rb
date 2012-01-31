@@ -1,6 +1,7 @@
 Stargate::Application.routes.draw do
   
   get "admin/templates/sync"
+  get "admin/zones/sync"
   match 'admin/infrastructure/:id/deploy' => 'admin/infrastructures#deploy'
   match 'admin/infrastructure/:id/undeploy' => 'admin/infrastructures#undeploy'
       

@@ -88,11 +88,13 @@ ActiveAdmin.register Infrastructure do
   form do |f|
     f.inputs "Infrastructure details" do
       f.input :name
-      f.input :infrastructure_type, :as => :select, :collection => ["AWS"], :selected => "AWS"
+      f.input :infrastructure_type, :label => 'Type', :as => :select, :collection => ["AWS"], :selected => "AWS"
+      f.input :id_zone, :label => 'Zone', :as => :select, :collection => Zone.find(:all)
       
       f.has_many :datacenters do |datacenter_form|
         datacenter_form.input :name
         datacenter_form.input :hosts
+        datacenter_form.input :id_zone, :label => 'Zone', :as => :select, :collection => Zone.find(:all)
         datacenter_form.input :id_template_server, :label => "Server template", :as => :select, :collection => Template.find(:all)
         datacenter_form.input :id_template_rs, :label => "RS template", :as => :select, :collection => Template.find(:all)
         datacenter_form.input :id_template_node, :label => "Node template", :as => :select, :collection => Template.find(:all)

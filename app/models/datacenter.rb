@@ -4,4 +4,5 @@ class Datacenter < ActiveRecord::Base
   validates                   :name, :presence => true
   validates                   :hosts, :presence => true
   validates_numericality_of   :hosts, :only_integer => true, :greater_than => 0
+  validates                   :id_zone, :presence => true
 end

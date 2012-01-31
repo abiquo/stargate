@@ -4,6 +4,7 @@ class CreateInfrastructures < ActiveRecord::Migration
       t.string :name
       t.string :infrastructure_type
       t.boolean :deployed
+      t.integer :id_zone
 
       t.timestamps
     end
