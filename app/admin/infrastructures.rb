@@ -13,7 +13,8 @@ ActiveAdmin.register Infrastructure do
       
       infrastructure.datacenters.each do |dc|
         template = Template.find(dc.id_template_rs)
-        @instances = ec2.run_instances(:image_id => template.idRemote, :max_count => dc.hosts, :instance_type => "m1.large")
+        zone = Zone.find(dc.id_zone)
+        @instances = ec2.run_instances(:image_id => template.idRemote, :max_count => dc.hosts, :instance_type => "m1.large", :availability_zone  => zone.zoneId)
         @instances.instancesSet.item.each do |instance|
           ec2.create_tags(:resource_id => instance.instanceId, :tag => [{'Name' => dc.name}])
         end

@@ -3,7 +3,7 @@ class CreateInfrastructures < ActiveRecord::Migration
     create_table :infrastructures do |t|
       t.string :name
       t.string :infrastructure_type
-      t.boolean :deployed
+      t.boolean :deployed, :default => false
       t.integer :id_zone
 
       t.timestamps
