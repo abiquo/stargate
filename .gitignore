@@ -18,3 +18,5 @@
 
 /config/environments/production.rb
 /config/environments/preproduction.rb
+
+*.swp
