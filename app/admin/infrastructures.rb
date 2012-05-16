@@ -16,10 +16,13 @@ ActiveAdmin.register Infrastructure do
         zone = Zone.find(dc.id_zone)
         @instances = ec2.run_instances(:image_id => template.idRemote, :max_count => dc.hosts, :instance_type => "m1.large", :availability_zone  => zone.zoneId)
         @instances.instancesSet.item.each do |instance|
+          i = infrastructure.instances.new(instance)
+          i.save
+
           ec2.create_tags(:resource_id => instance.instanceId, :tag => [{'Name' => dc.name}])
         end
       end
-      
+      #{"instanceId"=>"i-2f046249", "imageId"=>"ami-a113c4c8", "instanceState"=>{"code"=>"0", "name"=>"pending"}, "privateDnsName"=>nil, "dnsName"=>nil, "reason"=>nil, "amiLaunchIndex"=>"0", "productCodes"=>nil, "instanceType"=>"m1.large", "launchTime"=>"2012-05-16T21:02:17.000Z", "placement"=>{"availabilityZone"=>"us-east-1a", "groupName"=>nil}, "kernelId"=>"aki-825ea7eb", "monitoring"=>{"state"=>"disabled"}, "stateReason"=>{"code"=>"pending", "message"=>"pending"}, "architecture"=>"x86_64", "rootDeviceType"=>"ebs", "rootDeviceName"=>"/dev/sda1", "blockDeviceMapping"=>nil, "virtualizationType"=>"paravirtual", "clientToken"=>nil}
       infrastructure.deployed = true
       infrastructure.save
       
@@ -28,6 +31,7 @@ ActiveAdmin.register Infrastructure do
         format.json { head :ok }
       end 
     end
+    
     def undeploy   
       @conf = Preference.find(:all)
     
@@ -38,14 +42,12 @@ ActiveAdmin.register Infrastructure do
       ec2 = AWS::EC2::Base.new(:access_key_id => configuration['ACCESS_KEY_ID'], :secret_access_key => configuration['SECRET_ACCESS_KEY'])
       
       infrastructure = Infrastructure.find(params[:id])
-      
-      i = Array.new
-      ec2.describe_instances().reservationSet.item.each do |instance|
-        instance.instancesSet.item.each do |instance_item|
-          i << instance_item.instanceId
-        end
+            
+      @instances = infrastructure.instances.find(:all)
+      @instances.each do |i|
+        ec2.terminate_instances(:instance_id => i.instanceId)
+        i.destroy
       end
-      ec2.terminate_instances(:instance_id => i)
     
       infrastructure.deployed = false
       infrastructure.save

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120130212144) do
+ActiveRecord::Schema.define(:version => 20120516213901) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -65,6 +65,32 @@ ActiveRecord::Schema.define(:version => 20120130212144) do
     t.integer  "id_zone"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "instances", :force => true do |t|
+    t.string   "instanceId"
+    t.string   "imageId"
+    t.string   "instanceType"
+    t.string   "architecture"
+    t.string   "rootDeviceType"
+    t.string   "rootDeviceName"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.string   "instanceState"
+    t.string   "privateDnsName"
+    t.string   "dnsName"
+    t.string   "reason"
+    t.string   "amiLaunchIndex"
+    t.string   "productCodes"
+    t.date     "launchTime"
+    t.string   "placement"
+    t.string   "kernelId"
+    t.string   "monitoring"
+    t.string   "stateReason"
+    t.string   "blockDeviceMapping"
+    t.string   "virtualizationType"
+    t.string   "clientToken"
+    t.integer  "infrastructure_id"
   end
 
   create_table "preferences", :force => true do |t|

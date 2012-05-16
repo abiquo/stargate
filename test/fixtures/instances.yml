@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  instanceId: MyString
+  imageId: MyString
+  instanceType: MyString
+  architecture: MyString
+  rootDeviceType: MyString
+  rootDeviceName: MyString
+
+two:
+  instanceId: MyString
+  imageId: MyString
+  instanceType: MyString
+  architecture: MyString
+  rootDeviceType: MyString
+  rootDeviceName: MyString
