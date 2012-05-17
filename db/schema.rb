@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120516213901) do
+ActiveRecord::Schema.define(:version => 20120517225320) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -91,6 +91,10 @@ ActiveRecord::Schema.define(:version => 20120516213901) do
     t.string   "virtualizationType"
     t.string   "clientToken"
     t.integer  "infrastructure_id"
+    t.string   "privateIpAddress"
+    t.string   "ipAddress"
+    t.string   "tagSet"
+    t.string   "node_type"
   end
 
   create_table "preferences", :force => true do |t|

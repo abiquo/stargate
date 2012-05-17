@@ -1,4 +1,5 @@
 ActiveAdmin.register Infrastructure do
+
   controller do
     def deploy   
       @conf = Preference.find(:all)
@@ -14,12 +15,19 @@ ActiveAdmin.register Infrastructure do
       infrastructure.datacenters.each do |dc|
         template = Template.find(dc.id_template_rs)
         zone = Zone.find(dc.id_zone)
+
         @instances = ec2.run_instances(:image_id => template.idRemote, :max_count => dc.hosts, :instance_type => "m1.large", :availability_zone  => zone.zoneId)
         @instances.instancesSet.item.each do |instance|
-          i = infrastructure.instances.new(instance)
+          i = Instance.new()
+          while (i.ipAddress.nil?) do
+            instance_desc = ec2.describe_instances(:instance_id => instance.instanceId).reservationSet.item[0].instancesSet.item[0]
+            i = Instance.new(instance_desc)
+          end
+          i = infrastructure.instances.new(instance_desc)
+          i.node_type = 'KVM'
           i.save
 
-          ec2.create_tags(:resource_id => instance.instanceId, :tag => [{'Name' => dc.name}])
+          ec2.create_tags(:resource_id => instance.instanceId, :tag => [{'Name' => dc.name + "-KVM"}])
         end
       end
       #{"instanceId"=>"i-2f046249", "imageId"=>"ami-a113c4c8", "instanceState"=>{"code"=>"0", "name"=>"pending"}, "privateDnsName"=>nil, "dnsName"=>nil, "reason"=>nil, "amiLaunchIndex"=>"0", "productCodes"=>nil, "instanceType"=>"m1.large", "launchTime"=>"2012-05-16T21:02:17.000Z", "placement"=>{"availabilityZone"=>"us-east-1a", "groupName"=>nil}, "kernelId"=>"aki-825ea7eb", "monitoring"=>{"state"=>"disabled"}, "stateReason"=>{"code"=>"pending", "message"=>"pending"}, "architecture"=>"x86_64", "rootDeviceType"=>"ebs", "rootDeviceName"=>"/dev/sda1", "blockDeviceMapping"=>nil, "virtualizationType"=>"paravirtual", "clientToken"=>nil}
@@ -57,6 +65,18 @@ ActiveAdmin.register Infrastructure do
         format.json { head :ok }
       end 
     end
+    
+    def get_it
+      infrastructure = Infrastructure.find(params[:id])
+      @instances = infrastructure.instances
+
+      respond_to do |format|
+        format.html # index.html.erb
+        format.xml { render xml: @instances }
+        format.json { render json: @instances }
+      end
+    end
+
   end
 
   action_item :only => :show do
